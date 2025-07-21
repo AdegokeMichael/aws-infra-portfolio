@@ -8,7 +8,7 @@ resource "aws_security_group" "bastion_sg" {
 	    from_port = 22
 	    to_port = 22
 	    protocol = "tcp"
-	    cidr_blocks = [var.allowed_ssh_cidr] #Restrict to your IP
+	    cidr_blocks = [var.allowed_ssh_cidr] 
 	}
 
 	egress {
@@ -19,7 +19,7 @@ resource "aws_security_group" "bastion_sg" {
 	}
 
 	tags = {
-	    Name = "${var.name}-sg"
+	    Name = "${var.name}-bastion-sg"
 	}
 }
 
@@ -29,10 +29,21 @@ resource "aws_instance" "bastion" {
 	subnet_id = var.subnet_id
 	key_name = var.key_name
 	vpc_security_group_ids = [aws_security_group.bastion_sg.id]
-	associate_public_ip_address = true
+	associate_public_ip_address = false
 
 	tags = {
         Name = "${var.name}-bastion"
 	}
 
+}
+
+#Elastic IP
+resource "aws_eip" "bastion" {
+  domain = "vpc"
+}
+
+
+resource "aws_eip_association" "this" {
+	instance_id = aws_instance.bastion.id
+	allocation_id = aws_eip.bastion.id
 }

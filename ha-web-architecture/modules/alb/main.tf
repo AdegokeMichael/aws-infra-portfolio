@@ -27,8 +27,8 @@ resource "aws_lb" "this" {
 	name = "${var.name}-alb"
 	internal = false
 	load_balancer_type = "application"
-	security_groups = [aws_security_groups.alb_sg.id]
-	subnets = var.public_subnets_ids
+	security_groups = [aws_security_group.alb_sg.id]
+	subnets = var.public_subnet_ids
 
 	tags = {
 	    name = "${var.name}-alb"

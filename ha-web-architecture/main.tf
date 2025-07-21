@@ -20,21 +20,34 @@ module "bastion" {
 
 }
 
-module "web" {
-  source          = "./modules/web-tier"
-  name            = "personal"
-  vpc_id          = module.vpc.vpc_id
-  private_subnets = module.vpc.private_subnets
-  alb_sg_id       = module.alb.alb_sg_id
-  ami_id          = var.ami_id
-  instance_type   = "t3.micro"
-  key_name        = var.key_name
-}
-
 module "alb" {
-  source            = ".modules/alb"
+  source            = "./modules/alb"
   name              = "personal"
   vpc_id            = module.vpc.vpc_id
   public_subnet_ids = module.vpc.public_subnets
 
 }
+
+module "web" {
+  source             = "./modules/web-tier"
+  name               = "personal"
+  vpc_id             = module.vpc.vpc_id
+  private_subnet_ids = module.vpc.private_subnets
+  alb_sg_id          = module.alb.alb_sg_id
+  ami_id             = var.ami_id
+  instance_type      = "t3.micro"
+  key_name           = var.key_name
+}
+
+module "db" {
+  source              = "./modules/db-tier"
+  name                = "personal"
+  vpc_id              = module.vpc.vpc_id
+  private_subnet_ids  = module.vpc.private_subnets
+  web_sg_id           = module.web.web_sg_id
+  db_username         = "admin"
+  db_password         = "YourStrongPassword123"
+  azs                 = ["us-east-1a", "us-east-1b"]
+}
+
+

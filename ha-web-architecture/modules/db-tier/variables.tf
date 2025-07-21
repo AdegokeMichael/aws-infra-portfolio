@@ -1,6 +1,6 @@
 variable "name" {}
 variable "vpc_id" {}
-variable "private_subnet_id" {
+variable "private_subnet_ids" {
 	type = list(string)
 }
 variable "web_sg_id" {}

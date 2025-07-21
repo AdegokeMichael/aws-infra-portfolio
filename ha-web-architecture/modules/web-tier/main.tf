@@ -43,7 +43,7 @@ resource "aws_launch_template" "this" {
 }
 
 
-resource "aws_auto_caling_group" "this" {
+resource "aws_autoscaling_group" "this" {
 	vpc_zone_identifier = var.private_subnet_ids
 	desired_capacity = 2
 	max_size = 3
@@ -55,7 +55,7 @@ resource "aws_auto_caling_group" "this" {
 	    version = "$Latest"
 	}
 
-	tag = {
+	tag  {
 	    key = "Name"
 	    value = "${var.name}-web-asg"
 	    propagate_at_launch = true
